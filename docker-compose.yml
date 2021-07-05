@@ -1,0 +1,42 @@
+version: '3'
+services:
+  nginx:
+    image: nginx
+    ports:
+      - 80:80
+    volumes:
+      - nginx:/usr/share/nginx/html
+      - app:/usr/share/nginx/app
+  node:
+    restart: always
+    build: ./app
+    ports:
+      - 3000:3000
+    volumes:
+      - app:/app
+  mongo:
+    restart: always
+    build: ./database
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb:/data/db
+volumes:
+  mongodb:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './database/db'
+  app:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './app'
+  nginx:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './nginx/html'
